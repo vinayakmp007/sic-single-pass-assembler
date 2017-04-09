@@ -89,7 +89,7 @@ void add_sym_undef(char* symname,int address,const char* codeline)
 		po->next=NULL;
 		sym[symcount].start=po;
 		symcount++;
-		printf("Added symbol %s to list start %06X\n",symname,po->address);
+		//printf("Added symbol %s to list start %06X\n",symname,po->address);
 
 	}
 
@@ -105,7 +105,7 @@ void add_sym_undef(char* symname,int address,const char* codeline)
 		strcpy(po->code_line,codeline);
 		po->next=NULL;
 		t->next=po;
-		printf("Added addres to Symbol %s with adddres %06X\n",symname,po->address);
+		//	printf("Added addres to Symbol %s with adddres %06X\n",symname,po->address);
 	}
 
 }
@@ -137,7 +137,7 @@ void add_sym_def(char* symname,int value,FILE *fout){
 				while(po!=NULL){
 
 					strcpy(li,po->code_line);
-					printf("\n\n\nWriting %s li",li);
+					//printf("\n\n\nWriting %s li",li);
 					vget(li,label,opc,opr);
 					sepcoma(opr,opr1,opr2);
 					if(opr2[0]=='\0')ind=0;
@@ -147,7 +147,7 @@ void add_sym_def(char* symname,int value,FILE *fout){
 					opcode=searchop(opc);
 
 					wordb=makeob(opcode, ind, operand);
-					printf("\n %06X %02X %06X %06X   at adress %06X\n",opcode,ind,operand,wordb,po->address);
+					//	printf("\n %06X %02X %06X %06X   at adress %06X\n",opcode,ind,operand,wordb,po->address);
 
 					write_textrec(fout,po->address, 3, wordb, 1);
 					t=po;
@@ -467,7 +467,7 @@ void one_pass(const char* input,const char* output)
 			printf("\nEnd found at %06X",count);
 			write_textrec(fout, 0, 0, 0, 2);
 			end=count;
-						fprintf(fout,"E^%06X",start);
+						fprintf(fout,"E^%06X",get_sym_value(opr1));
 						fseek(fout, 0, 0);
 						fprintf(fout,"H^%-6s^%06X^%06X\n",pname,start,end-start);
 							}
@@ -547,7 +547,6 @@ tadd=0;
 int main()
 {
 loadop();
-print_op();
 one_pass(_INFILE_,_OUTFILE_);
 return 0;
 }
