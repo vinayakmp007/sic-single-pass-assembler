@@ -37,17 +37,17 @@ int search_sym(const char *name){                                            //r
 }
 void add_sym_undef(char* symname,int address,const char* codeline)
 {
-	int k=search_sym(syname);
+	int k=search_sym(symname);
 	sym_addr *po,*t;
 	if(k==-2){
 
 		strcpy(sym[symcount].name,symname);
-		sym[symcount].value=-1;
+		sym[symcount].val=-1;
 		sym[symcount].def=0;
 		po=(sym_addr*)malloc(sizeof(sym_addr));
-		(*po).address=address;
-		strcpy((*po).code_line,codeline);
-		(*po).next=NULL;
+		po->address=address;
+		strcpy(po->code_line,codeline);
+		po->next=NULL;
 		sym[symcount].start=po;
 		symcount++;
 
@@ -57,15 +57,15 @@ void add_sym_undef(char* symname,int address,const char* codeline)
 	else
 	{
 		t=sym[k].start;
-		while(t.next!=NULL){
-			t=t.next;
+		while(t->next!=NULL){
+			t=t->next;
 		}
 
 		po=(sym_addr*)malloc(sizeof(sym_addr));
-		(*po).address=address;
-		strcpy((*po).code_line,codeline);
-		(*po).next=NULL;
-		t.next=po;
+		po->address=address;
+		strcpy((po->code_line,codeline);
+		po->next=NULL;
+		t->next=po;
 
 	}
 
@@ -257,12 +257,23 @@ void one_pass(const char* input,const char* output)
 	FILE *fout=fopen(output,"w");
 	int start=rstart(input);
 
-	int count=start,flag=0,temp=0;cmnt=0;
-	char label[100],opc[100],opr[100],li[100],startadd[10];
+	int count=start,flag=0,temp=0,cmnt=0;
+	char label[100],opc[100],opr[100],li[200],startadd[10];
 
 	sprintf(startadd,"%06X",start);
 
-	if(!p||!q){}printf("\nFile not found");return;}
+	if(!fout||!fin){printf("\nFile not found");return;}
+
+	do{
+        fgets(li,100,fin);
+        cmnt=skipcomment(li);
+        if(!isnulls(li))continue;
+        if(feof(fin))break;
+
+
+
+
+	}while(!(feof(fin)||(strcmp(opc,"END")==0)));
 
 
 }
