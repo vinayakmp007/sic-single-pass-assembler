@@ -152,7 +152,7 @@ void add_sym_def(char* symname,int value,FILE *fout){
 					write_textrec(fout,po->address, 3, wordb, 1);
 					t=po;
 					po=po->next;
-					//	free(t);
+					free(t);
 
 
 				}
@@ -295,7 +295,7 @@ if(feof(p)){fclose(p);return r;}
  vget(li,label,opc,opr);
 if(strcmp(opc,"START")==0){
 
-sscanf(opr,"%d",&r);
+sscanf(opr,"%X",&r);
 
 }
 fclose(p);
@@ -357,6 +357,12 @@ void one_pass(const char* input,const char* output)
 				wordb=makeob(opcode, ind, 0);
 				write_textrec(fout, count, 3, wordb, 0);
 				//	printf("Added");
+			}
+			else {
+				wordb=makeob(opcode, ind, 0);
+				write_textrec(fout, count, 3, wordb, 0);
+
+
 			}
 
 			count+=3;
@@ -465,6 +471,8 @@ void one_pass(const char* input,const char* output)
 						fseek(fout, 0, 0);
 						fprintf(fout,"H^%-6s^%06X^%06X\n",pname,start,end-start);
 							}
+
+
 		else {
 		printf("invalid opcode %s",opc);
 		return ;
@@ -478,7 +486,7 @@ void one_pass(const char* input,const char* output)
 int write_textrec(FILE *fil,int addr,int bytesize,int word,int new){         //when new==0 default        
 static int tsize=0,tadd=0;                                                   //when new==1 for new single text record
 static char tline[500];                                                      //when new==2 flushes the line to text record
-char word_s[15];
+char word_s[15],*ch;
 if(bytesize==3)sprintf(word_s,"%06X",word);
 else if(bytesize==2)sprintf(word_s,"%04X",word);
 else if(bytesize==1)sprintf(word_s,"%02X",word);
@@ -501,7 +509,7 @@ tsize+=bytesize;
 }
 else if(new==1)
 {
-	if(tsize>0)fprintf(fil,"T^%06X^%02x%s\n",tadd,tsize,tline);
+	if(tsize>0)fprintf(fil,"T^%06X^%02X%s\n",tadd,tsize,tline);
 tsize=0;
 tline[0]='\0';
 tadd=0;
@@ -512,8 +520,10 @@ tadd=addr;
 }
 
 strcat(tline,"^");
-strcat(tline,word_s);
-tsize+=bytesize;
+ch=word_s+2;                          //forward refernce is written here
+tadd=tadd+1;
+strcat(tline,ch);
+tsize+=bytesize-1;
 
 fprintf(fil,"T^%06X^%02x%s\n",tadd,tsize,tline);
 tsize=0;
