@@ -4,7 +4,7 @@ AUTHOR: VINAYAK MP, B.TECH, CSE TKMCE
 
 #----C Implementation for sic single pass Assembler----#
 
-onep.c corresponds to the first pass program and secondpass.c corresponds to the second pass program
+onep.c corresponds to the program.
 
 Opcode are available in optab.txt
 
